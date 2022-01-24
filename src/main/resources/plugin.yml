@@ -1,0 +1,6 @@
+name: FeatherTPS
+version: '${project.version}'
+main: com.zerek.feathertps.FeatherTPS
+api-version: 1.18
+authors: [ Zerek ]
+description: Kills dense mobs when tps is low and kicks all players if tps is low enough.

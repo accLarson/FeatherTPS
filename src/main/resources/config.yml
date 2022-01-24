@@ -1,0 +1,59 @@
+tps-kick:
+  #what TPS players should all be kicked at
+  tps: 2.0
+
+  #ammount of ticks between each tps check (20 ticks = 1 second)
+  tick-period: 1200
+
+  #kick warning message
+  warn-message: "<#c0a1d1>Trash TPS detected - Everyone will be automatically kicked"
+
+  #kick warning message
+  kick-message: "\n<white>• <#c0a1d1>Server TPS issues auto-triggered this kick"
+
+  #kick cancel message
+  cancel-message: "<white>• <#c0a1d1>Server TPS recovered - canceled kick  :  )"
+
+kill-dense-mobs:
+  # tps must be this value or below for killDenseMobsTask to run
+  tps: 18.0
+
+  # x and z range (square radius/1/2 the size of the box) for calculating nearby entities around an entity
+  xz-range: 2.5
+
+  # z range (square radius/1/2 the size of the box) for calculating nearby entities around an entity
+  y-range: 1.5
+
+  # Required entity count within range to be considered "dense"
+  dense-count: 20
+
+  #Chance as a % that a dense mob will be killed/removed
+  chance: 25
+
+  # Message sent to those with permission feather.killdensemobs.notify
+  message: "<DARK_GRAY> TPS: <roundedTPS> | Dense Mobs Killed: <killCount>/<killableTotal>"
+
+  # List of entity types that will be considered for removal
+  killable-entities:
+    - "COW"
+    - "PIG"
+    - "CHICKEN"
+    - "RABBIT"
+    - "SHEEP"
+    - "SQUID"
+    - "ENDERMAN"
+    - "PIGLIN"
+    - "CAVE_SPIDER"
+    - "SPIDER"
+    - "BLAZE"
+    - "CREEPER"
+    - "DROWNED"
+    - "GHAST"
+    - "GUARDIAN"
+    - "PILLAGER"
+    - "SKELETON"
+    - "SLIME"
+    - "VINDICATOR"
+    - "WITCH"
+    - "WITHER_SKELETON"
+    - "ZOMBIE"
