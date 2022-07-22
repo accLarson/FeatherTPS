@@ -1,7 +1,7 @@
 tps-message: "<#656b96>TPS <gray>(1m - 5m - 15m)<#656b96>: <#949bd1><tps>"
 tps-kick:
   #what TPS players should all be kicked at
-  tps: 2.0
+  tps: 6.0
 
   #ammount of ticks between each tps check (20 ticks = 1 second)
   tick-period: 1200
