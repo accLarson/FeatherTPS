@@ -1,5 +1,7 @@
 package com.zerek.feathertps;
 
+import com.zerek.feathertps.commands.TPSCommand;
+import com.zerek.feathertps.commands.TPSCommandTabCompleter;
 import com.zerek.feathertps.listeners.EntityTargetListener;
 import com.zerek.feathertps.tasks.CheckTPSTask;
 import org.bukkit.configuration.ConfigurationSection;
@@ -10,7 +12,7 @@ import java.util.*;
 
 public final class FeatherTPS extends JavaPlugin {
 
-    private final Collection<LivingEntity> tempted = new ArrayList<LivingEntity>();
+    private final Collection<LivingEntity> tempted = new ArrayList<>();
     Map<String,Object> killDenseMobConfig = new HashMap<>();
     Map<String,Object> tpsKickConfig = new HashMap<>();
     @Override
@@ -26,6 +28,9 @@ public final class FeatherTPS extends JavaPlugin {
         configurationSection2.getKeys(false).forEach(key -> tpsKickConfig.put(key,configurationSection2.get(key)));
 
         getServer().getScheduler().scheduleSyncRepeatingTask(this, new CheckTPSTask(this, tpsKickConfig, killDenseMobConfig), 0L, 200L);
+
+        this.getCommand("tps").setExecutor(new TPSCommand(this));
+        this.getCommand("tps").setTabCompleter(new TPSCommandTabCompleter());
     }
     @Override
     public void onDisable() {

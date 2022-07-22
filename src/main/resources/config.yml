@@ -1,3 +1,4 @@
+tps-message: "<#656b96>TPS (1m, 5m, 15m): <#949bd1><tps>"
 tps-kick:
   #what TPS players should all be kicked at
   tps: 2.0
@@ -31,7 +32,7 @@ kill-dense-mobs:
   chance: 25
 
   # Message sent to those with permission feather.killdensemobs.notify
-  message: "<DARK_GRAY> TPS: <roundedTPS> | Dense Mobs Killed: <killCount>/<killableTotal>"
+  message: "<DARK_GRAY> TPS: <roundedtps> | Dense Mobs Killed: <killcount>/<killabletotal>"
 
   # List of entity types that will be considered for removal
   killable-entities:
@@ -41,6 +42,7 @@ kill-dense-mobs:
     - "RABBIT"
     - "SHEEP"
     - "SQUID"
+    - "GLOW_SQUID"
     - "ENDERMAN"
     - "PIGLIN"
     - "CAVE_SPIDER"
@@ -53,7 +55,13 @@ kill-dense-mobs:
     - "PILLAGER"
     - "SKELETON"
     - "SLIME"
+    - "MAGMA_CUBE"
     - "VINDICATOR"
     - "WITCH"
     - "WITHER_SKELETON"
     - "ZOMBIE"
+    - "TURTLE"
+    - "FROG"
+    - "STRIDER"
+    - "BEE"
+    - "IRON_GOLEM"

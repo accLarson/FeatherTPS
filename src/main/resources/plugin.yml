@@ -1,6 +1,9 @@
 name: FeatherTPS
 version: '${project.version}'
 main: com.zerek.feathertps.FeatherTPS
-api-version: 1.18
+api-version: 1.19
 authors: [ Zerek ]
 description: Kills dense mobs when tps is low and kicks all players if tps is low enough.
+commands:
+  tps:
+    description: displays server TPS
