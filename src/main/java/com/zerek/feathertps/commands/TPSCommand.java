@@ -11,17 +11,14 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-
 public class TPSCommand implements CommandExecutor {
 
     private final FeatherTPS plugin;
-    private final String tpsMessage,tpsAllMessage;
+    private final String tpsMessage;
 
     public TPSCommand(FeatherTPS plugin) {
         this.plugin = plugin;
         this.tpsMessage = plugin.getConfig().getString("tps-message");
-        this.tpsAllMessage = plugin.getConfig().getString("tps-all-message");
     }
 
     private String getTPS(int index){
@@ -33,22 +30,10 @@ public class TPSCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender instanceof Player || sender instanceof ConsoleCommandSender){
-            String TPSString;
-            switch (args.length) {
-                case 0:
-                    TPSString = getTPS(0);
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize(tpsMessage, Placeholder.unparsed("tps", TPSString)));
-                    break;
-                case 1:
-                    if (args[0].equalsIgnoreCase("all")) {
-                        TPSString = getTPS(0) + " - " + getTPS(1) + " - " + getTPS(2);
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize(tpsAllMessage, Placeholder.unparsed("tps", TPSString)));
-                    } else sender.sendMessage(ChatColor.of("#E4453A") + "Invalid Command");
-                    break;
-                default:
-                    sender.sendMessage(ChatColor.of("#E4453A") + "Invalid Command");
-                    break;
-            }
+            if (args[0].equalsIgnoreCase("all")) {
+                String TPSString = getTPS(0) + " - " + getTPS(1) + " - " + getTPS(2);
+                sender.sendMessage(MiniMessage.miniMessage().deserialize(tpsMessage, Placeholder.unparsed("tps", TPSString)));
+            } else sender.sendMessage(ChatColor.of("#E4453A") + "Invalid Command");
         }
         return true;
     }
