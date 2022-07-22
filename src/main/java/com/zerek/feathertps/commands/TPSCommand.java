@@ -30,7 +30,7 @@ public class TPSCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender instanceof Player || sender instanceof ConsoleCommandSender){
-            if (args[0].equalsIgnoreCase("all")) {
+            if (args.length == 0) {
                 String TPSString = getTPS(0) + " - " + getTPS(1) + " - " + getTPS(2);
                 sender.sendMessage(MiniMessage.miniMessage().deserialize(tpsMessage, Placeholder.unparsed("tps", TPSString)));
             } else sender.sendMessage(ChatColor.of("#E4453A") + "Invalid Command");
