@@ -5,9 +5,12 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.inventory.EntityEquipment;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -41,34 +44,84 @@ public class CheckTPSTask implements Runnable{
             plugin.getServer().broadcast(mm.deserialize((String) kickC.get("warn-message")));
         }
 
-        // kill-dense-mobs
+        // Create list of filtered living entities that can be killed.
         if (tps <= (double) killC.get("tps")){
-            Collection<LivingEntity> killable = plugin.getServer().getWorlds().stream().flatMap(world -> world.getLivingEntities().stream()).collect(Collectors.toList());
-            killable.removeIf(e -> e.getNearbyEntities((Double) killC.get("xz-range"), (Double) killC.get("y-range"), (Double) killC.get("xz-range")).size() < (Integer) killC.get("dense-count"));
-            killable.removeIf(e -> !killableEntities.contains(e.getType().toString()) || (e.customName() != null) || e.isLeashed());
-            killable.removeIf(e -> e.customName() != null);
-            killable.removeIf(LivingEntity::isLeashed);
-            killable.removeIf(e ->(e.getEquipment().getHelmet().getType() != Material.AIR));
-            killable.removeIf(e ->(e.getEquipment().getChestplate().getType() != Material.AIR));
-            killable.removeIf(e ->(e.getEquipment().getLeggings().getType() != Material.AIR));
-            killable.removeIf(e ->(e.getEquipment().getBoots().getType() != Material.AIR));
-            killable.removeIf(e ->(e.getEquipment().getItemInMainHand().getType() != Material.AIR));
-            killable.removeIf(e ->(e.getEquipment().getItemInOffHand().getType() != Material.AIR));
-            killable.removeAll(plugin.getTempted());
+            Collection<LivingEntity> killableMobs = plugin.getServer().getWorlds().stream().flatMap(world -> world.getLivingEntities().stream()).collect(Collectors.toList());
+            killableMobs.removeIf(e -> e.getNearbyEntities((Double) killC.get("xz-range"), (Double) killC.get("y-range"), (Double) killC.get("xz-range")).size() < (Integer) killC.get("dense-count"));
+            killableMobs.removeIf(e -> !killableEntities.contains(e.getType().toString()) || (e.customName() != null) || e.isLeashed());
+            killableMobs.removeIf(e -> e.customName() != null);
+            killableMobs.removeIf(LivingEntity::isLeashed);
+            killableMobs.removeIf(e ->(e.getEquipment().getHelmet().getType() != Material.AIR));
+            killableMobs.removeIf(e ->(e.getEquipment().getChestplate().getType() != Material.AIR));
+            killableMobs.removeIf(e ->(e.getEquipment().getLeggings().getType() != Material.AIR));
+            killableMobs.removeIf(e ->(e.getEquipment().getBoots().getType() != Material.AIR));
+            killableMobs.removeIf(e ->(e.getEquipment().getItemInMainHand().getType() != Material.AIR));
+            killableMobs.removeIf(e ->(e.getEquipment().getItemInOffHand().getType() != Material.AIR));
+            killableMobs.removeAll(plugin.getTempted());
             plugin.getTempted().clear();
-            int killableTotal = killable.size();
-            int killCount = 0;
-            for (LivingEntity k : killable) {
+
+            // Kill dense mobs on a random change.
+            int denseMobsTotal = killableMobs.size();
+            int killedMobsCount = 0;
+            for (LivingEntity k : killableMobs) {
                 if (rand.nextInt(100) < (Integer) killC.get("chance")) {
-                    killCount++;
+                    killedMobsCount++;
                     k.remove();
                 }
             }
-            if (killableTotal > 0){
+
+            // Create list of filtered minecarts that can be removed.
+            Collection<Minecart> removableMinecarts = plugin.getServer().getWorlds().stream().flatMap(world -> world.getEntitiesByClass(Minecart.class).stream()).collect(Collectors.toList());
+            removableMinecarts.removeIf(m -> m.getNearbyEntities((Double) killC.get("xz-range"), (Double) killC.get("y-range"), (Double) killC.get("xz-range")).size() < (Integer) killC.get("dense-count"));
+            removableMinecarts.removeIf(m -> !m.isEmpty());
+            int denseMinecartTotal = removableMinecarts.size();
+            int removedMinecartCount = 0;
+
+            // Remove dense minecarts on a random change.
+            for (Minecart m : removableMinecarts) {
+                if (rand.nextInt(100) < (Integer) killC.get("chance")) {
+                    removedMinecartCount++;
+                    m.remove();
+                }
+            }
+
+            // Create list of filtered armor stands that can be removed.
+            Collection<ArmorStand> removableStands = plugin.getServer().getWorlds().stream().flatMap(world -> world.getEntitiesByClass(ArmorStand.class).stream()).collect(Collectors.toList());
+            removableStands.removeIf(s -> s.getNearbyEntities((Double) killC.get("xz-range"), (Double) killC.get("y-range"), (Double) killC.get("xz-range")).size() < (Integer) killC.get("dense-count"));
+            removableStands.removeIf(s ->(s.getEquipment().getHelmet().getType() != Material.AIR));
+            removableStands.removeIf(s ->(s.getEquipment().getChestplate().getType() != Material.AIR));
+            removableStands.removeIf(s ->(s.getEquipment().getLeggings().getType() != Material.AIR));
+            removableStands.removeIf(s ->(s.getEquipment().getBoots().getType() != Material.AIR));
+            int denseStandTotal = removableStands.size();
+            int removedStandCount = 0;
+
+            // Remove dense armor stands on a random change.
+            for (ArmorStand s : removableStands) {
+                if (rand.nextInt(100) < (Integer) killC.get("chance")) {
+                    removedStandCount++;
+                    s.remove();
+                }
+            }
+
+            //broadcast kills/removals to ops and logger
+            if (denseMobsTotal > 0 || denseMinecartTotal > 0 || denseStandTotal > 0){
+
                 double roundedTPS = Math.round(plugin.getServer().getTPS()[0] * 100)/100.0;
-                plugin.getLogger().warning("TPS: " + roundedTPS + " | Dense Mobs Killed: " + killCount + "/" + killableTotal);
+
+                plugin.getLogger().warning("TPS: " + roundedTPS
+                        + " \nDense Mobs Killed: " + killedMobsCount + "/" + denseMobsTotal
+                        + " \nDense Minecarts Removed: " + removedMinecartCount + "/" + denseMinecartTotal
+                        + " \nDense Armor Stands Removed: " + removedStandCount + "/" + denseStandTotal);
+
                 for (OfflinePlayer op : plugin.getServer().getOperators()) {
-                    if (op.isOnline()) op.getPlayer().sendMessage(MiniMessage.miniMessage().deserialize((String) killC.get("message"), Placeholder.unparsed("roundedtps", String.valueOf(roundedTPS)), Placeholder.unparsed("killcount", String.valueOf(killCount)), Placeholder.unparsed("killabletotal", String.valueOf(killableTotal))));
+                    if (op.isOnline()) op.getPlayer().sendMessage(MiniMessage.miniMessage().deserialize((String) killC.get("message"),
+                            Placeholder.unparsed("roundedtps", String.valueOf(roundedTPS)),
+                            Placeholder.unparsed("killedmobscount", String.valueOf(killedMobsCount)),
+                            Placeholder.unparsed("densemobstotal", String.valueOf(denseMobsTotal)),
+                            Placeholder.unparsed("removedminecartcount", String.valueOf(removedMinecartCount)),
+                            Placeholder.unparsed("denseminecarttotal", String.valueOf(denseMinecartTotal)),
+                            Placeholder.unparsed("removedstandcount", String.valueOf(removedStandCount)),
+                            Placeholder.unparsed("densestandtotal", String.valueOf(denseStandTotal))));
                 }
             }
         }

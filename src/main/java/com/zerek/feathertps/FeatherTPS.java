@@ -13,7 +13,7 @@ import java.util.*;
 public final class FeatherTPS extends JavaPlugin {
 
     private final Collection<LivingEntity> tempted = new ArrayList<>();
-    Map<String,Object> killDenseMobConfig = new HashMap<>();
+    Map<String,Object> killDenseConfig = new HashMap<>();
     Map<String,Object> tpsKickConfig = new HashMap<>();
     @Override
     public void onEnable() {
@@ -21,13 +21,13 @@ public final class FeatherTPS extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new EntityTargetListener(this),this);
 
-        ConfigurationSection configurationSection = getConfig().getConfigurationSection("kill-dense-mobs");
-        configurationSection.getKeys(false).forEach(key -> killDenseMobConfig.put(key, configurationSection.get(key)));
+        ConfigurationSection configurationSection = getConfig().getConfigurationSection("kill-dense");
+        configurationSection.getKeys(false).forEach(key -> killDenseConfig.put(key, configurationSection.get(key)));
 
         ConfigurationSection configurationSection2 = getConfig().getConfigurationSection("tps-kick");
         configurationSection2.getKeys(false).forEach(key -> tpsKickConfig.put(key,configurationSection2.get(key)));
 
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, new CheckTPSTask(this, tpsKickConfig, killDenseMobConfig), 0L, 200L);
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, new CheckTPSTask(this, tpsKickConfig, killDenseConfig), 0L, 200L);
 
         this.getCommand("tps").setExecutor(new TPSCommand(this));
         this.getCommand("tps").setTabCompleter(new TPSCommandTabCompleter());
