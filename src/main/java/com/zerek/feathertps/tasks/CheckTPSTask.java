@@ -70,21 +70,6 @@ public class CheckTPSTask implements Runnable{
                 }
             }
 
-            // Create list of filtered minecarts that can be removed.
-            Collection<Minecart> removableMinecarts = plugin.getServer().getWorlds().stream().flatMap(world -> world.getEntitiesByClass(Minecart.class).stream()).collect(Collectors.toList());
-            removableMinecarts.removeIf(m -> m.getNearbyEntities((Double) killC.get("xz-range"), (Double) killC.get("y-range"), (Double) killC.get("xz-range")).size() < (Integer) killC.get("dense-count"));
-            removableMinecarts.removeIf(m -> !m.isEmpty());
-            int denseMinecartTotal = removableMinecarts.size();
-            int removedMinecartCount = 0;
-
-            // Remove dense minecarts on a random change.
-            for (Minecart m : removableMinecarts) {
-                if (rand.nextInt(100) < (Integer) killC.get("chance")) {
-                    removedMinecartCount++;
-                    m.remove();
-                }
-            }
-
             // Create list of filtered armor stands that can be removed.
             Collection<ArmorStand> removableStands = plugin.getServer().getWorlds().stream().flatMap(world -> world.getEntitiesByClass(ArmorStand.class).stream()).collect(Collectors.toList());
             removableStands.removeIf(s -> s.getNearbyEntities((Double) killC.get("xz-range"), (Double) killC.get("y-range"), (Double) killC.get("xz-range")).size() < (Integer) killC.get("dense-count"));
@@ -104,22 +89,17 @@ public class CheckTPSTask implements Runnable{
             }
 
             //broadcast kills/removals to ops and logger
-            if (denseMobsTotal > 0 || denseMinecartTotal > 0 || denseStandTotal > 0){
+            if (denseMobsTotal > 0 || denseStandTotal > 0){
 
                 double roundedTPS = Math.round(plugin.getServer().getTPS()[0] * 100)/100.0;
 
-                plugin.getLogger().warning("TPS: " + roundedTPS
-                        + " \nDense Mobs Killed: " + killedMobsCount + "/" + denseMobsTotal
-                        + " \nDense Minecarts Removed: " + removedMinecartCount + "/" + denseMinecartTotal
-                        + " \nDense Armor Stands Removed: " + removedStandCount + "/" + denseStandTotal);
+                plugin.getLogger().warning("TPS: " + roundedTPS + " \nDense Mobs Killed: " + killedMobsCount + "/" + denseMobsTotal + " \nDense Armor Stands Removed: " + removedStandCount + "/" + denseStandTotal);
 
                 for (OfflinePlayer op : plugin.getServer().getOperators()) {
                     if (op.isOnline()) op.getPlayer().sendMessage(MiniMessage.miniMessage().deserialize((String) killC.get("message"),
                             Placeholder.unparsed("roundedtps", String.valueOf(roundedTPS)),
                             Placeholder.unparsed("killedmobscount", String.valueOf(killedMobsCount)),
                             Placeholder.unparsed("densemobstotal", String.valueOf(denseMobsTotal)),
-                            Placeholder.unparsed("removedminecartcount", String.valueOf(removedMinecartCount)),
-                            Placeholder.unparsed("denseminecarttotal", String.valueOf(denseMinecartTotal)),
                             Placeholder.unparsed("removedstandcount", String.valueOf(removedStandCount)),
                             Placeholder.unparsed("densestandtotal", String.valueOf(denseStandTotal))));
                 }

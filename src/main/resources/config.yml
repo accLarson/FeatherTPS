@@ -32,10 +32,7 @@ kill-dense:
   chance: 25
 
   # Message sent to those with permission feather.killdensemobs.notify
-  message: "<DARK_GRAY> TPS: <roundedtps> 
-          <br>Dense Mobs Killed: <killedmobscount>/<densemobstotal> 
-          <br>Dense Minecarts Removed: <removedminecartcount>/<denseminecarttotal>
-          <br>Dense Armor Stands Removed: <removedstandcount>/<densestandtotal>"
+  message: "<DARK_GRAY> TPS: <roundedtps> | Dense Mobs Killed: <killedmobscount>/<densemobstotal> | Dense Stands Removed: <removedstandcount>/<densestandtotal>"
 
 
   # List of entity types that will be considered for removal
