@@ -17,7 +17,7 @@ tps-kick:
 
 kill-dense:
   # tps must be this value or below for killDenseMobsTask to run
-  tps: 19.0
+  tps: 18.0
 
   # x and z range (square radius/1/2 the size of the box) for calculating nearby entities around an entity
   xz-range: 2.5
@@ -32,10 +32,7 @@ kill-dense:
   chance: 25
 
   # Message sent to those with permission feather.killdensemobs.notify
-  message: "<DARK_GRAY> TPS: <roundedtps> 
-          <br>Dense Mobs Killed: <killedmobscount>/<densemobstotal> 
-          <br>Dense Minecarts Removed: <removedminecartcount>/<denseminecarttotal>
-          <br>Dense Armor Stands Removed: <removedstandcount>/<densestandtotal>"
+  message: "<DARK_GRAY> TPS: <roundedtps> | Dense Mobs Killed: <killedmobscount>/<densemobstotal> | Dense Stands Removed: <removedstandcount>/<densestandtotal>"
 
 
   # List of entity types that will be considered for removal
@@ -69,3 +66,4 @@ kill-dense:
     - "STRIDER"
     - "BEE"
     - "IRON_GOLEM"
+    - "SHULKER"
