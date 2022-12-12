@@ -70,38 +70,18 @@ public class CheckTPSTask implements Runnable{
                 }
             }
 
-            // Create list of filtered armor stands that can be removed.
-            Collection<ArmorStand> removableStands = plugin.getServer().getWorlds().stream().flatMap(world -> world.getEntitiesByClass(ArmorStand.class).stream()).collect(Collectors.toList());
-            removableStands.removeIf(s -> s.getNearbyEntities((Double) killC.get("xz-range"), (Double) killC.get("y-range"), (Double) killC.get("xz-range")).size() < (Integer) killC.get("dense-count"));
-            removableStands.removeIf(s ->(s.getEquipment().getHelmet().getType() != Material.AIR));
-            removableStands.removeIf(s ->(s.getEquipment().getChestplate().getType() != Material.AIR));
-            removableStands.removeIf(s ->(s.getEquipment().getLeggings().getType() != Material.AIR));
-            removableStands.removeIf(s ->(s.getEquipment().getBoots().getType() != Material.AIR));
-            int denseStandTotal = removableStands.size();
-            int removedStandCount = 0;
-
-            // Remove dense armor stands on a random change.
-            for (ArmorStand s : removableStands) {
-                if (rand.nextInt(100) < (Integer) killC.get("chance")) {
-                    removedStandCount++;
-                    s.remove();
-                }
-            }
-
             //broadcast kills/removals to ops and logger
-            if (denseMobsTotal > 0 || denseStandTotal > 0){
+            if (denseMobsTotal > 0 ){
 
                 double roundedTPS = Math.round(plugin.getServer().getTPS()[0] * 100)/100.0;
 
-                plugin.getLogger().warning("TPS: " + roundedTPS + " \nDense Mobs Killed: " + killedMobsCount + "/" + denseMobsTotal + " \nDense Armor Stands Removed: " + removedStandCount + "/" + denseStandTotal);
+                plugin.getLogger().warning("TPS: " + roundedTPS + " \nDense Mobs Killed: " + killedMobsCount + "/" + denseMobsTotal);
 
                 for (OfflinePlayer op : plugin.getServer().getOperators()) {
                     if (op.isOnline()) op.getPlayer().sendMessage(MiniMessage.miniMessage().deserialize((String) killC.get("message"),
                             Placeholder.unparsed("roundedtps", String.valueOf(roundedTPS)),
                             Placeholder.unparsed("killedmobscount", String.valueOf(killedMobsCount)),
-                            Placeholder.unparsed("densemobstotal", String.valueOf(denseMobsTotal)),
-                            Placeholder.unparsed("removedstandcount", String.valueOf(removedStandCount)),
-                            Placeholder.unparsed("densestandtotal", String.valueOf(denseStandTotal))));
+                            Placeholder.unparsed("densemobstotal", String.valueOf(denseMobsTotal))));
                 }
             }
         }
