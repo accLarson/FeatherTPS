@@ -1,4 +1,5 @@
 tps-message: "<#656b96>TPS <gray>(1m - 5m - 15m)<#656b96>: <#949bd1><tps>"
+ping-message: "<#656b96>Pong! <gray><player> ping<#656b96>: <#949bd1><ping>ms"
 tps-kick:
   #what TPS players should all be kicked at
   tps: 6.0
@@ -16,7 +17,7 @@ tps-kick:
   cancel-message: "<white>• <#c0a1d1>Server TPS recovered - canceled kick  :  )"
 
 kill-dense:
-  # tps must be this value or below for killDenseMobsTask to run
+  # tps must be this value or below for CheckTPSTask to run
   tps: 18.0
 
   # x and z range (square radius/1/2 the size of the box) for calculating nearby entities around an entity
@@ -31,7 +32,7 @@ kill-dense:
   #Chance as a % that a dense mob will be killed/removed
   chance: 25
 
-  # Message sent to those with permission feather.killdensemobs.notify
+  # Message sent to ops when tps is low
   message: "<DARK_GRAY> TPS: <roundedtps> | Dense Mobs Killed: <killedmobscount>/<densemobstotal>"
 
 

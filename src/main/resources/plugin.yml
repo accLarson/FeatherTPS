@@ -7,3 +7,5 @@ description: Kills dense mobs when tps is low and kicks all players if tps is lo
 commands:
   tps:
     description: displays server TPS
+  ping:
+    description: displays player ping

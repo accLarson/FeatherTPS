@@ -1,5 +1,7 @@
 package com.zerek.feathertps;
 
+import com.zerek.feathertps.commands.PingCommand;
+import com.zerek.feathertps.commands.PingCommandTabCompleter;
 import com.zerek.feathertps.commands.TPSCommand;
 import com.zerek.feathertps.commands.TPSCommandTabCompleter;
 import com.zerek.feathertps.listeners.EntityTargetListener;
@@ -31,6 +33,8 @@ public final class FeatherTPS extends JavaPlugin {
 
         this.getCommand("tps").setExecutor(new TPSCommand(this));
         this.getCommand("tps").setTabCompleter(new TPSCommandTabCompleter());
+        this.getCommand("ping").setExecutor(new PingCommand(this));
+        this.getCommand("ping").setTabCompleter(new PingCommandTabCompleter());
     }
     @Override
     public void onDisable() {
