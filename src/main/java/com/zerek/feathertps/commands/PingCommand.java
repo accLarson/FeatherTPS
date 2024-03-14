@@ -11,6 +11,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.MetadataValue;
 import org.jetbrains.annotations.NotNull;
 
 public class PingCommand implements CommandExecutor {
@@ -38,7 +39,7 @@ public class PingCommand implements CommandExecutor {
             if (commandSender instanceof Player || commandSender instanceof ConsoleCommandSender) {
 
                 Player player = Bukkit.getPlayer(strings[0]);
-                if (player == null) {
+                if (player == null || isVanished(player)) {
                     commandSender.sendMessage(ChatColor.of("#E4453A") + "Player not online.");
                     return true;
                 }
@@ -57,4 +58,12 @@ public class PingCommand implements CommandExecutor {
 
         }
     }
+
+    private static boolean isVanished(Player player) {
+        for (MetadataValue meta : player.getMetadata("vanished")) {
+            return meta.asBoolean();
+        }
+        return false;
+    }
+
 }
