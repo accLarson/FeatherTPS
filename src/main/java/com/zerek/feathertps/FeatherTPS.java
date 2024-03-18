@@ -1,9 +1,9 @@
 package com.zerek.feathertps;
 
 import com.zerek.feathertps.commands.PingCommand;
-import com.zerek.feathertps.commands.PingCommandTabCompleter;
+import com.zerek.feathertps.commands.PingTabCompleter;
 import com.zerek.feathertps.commands.TPSCommand;
-import com.zerek.feathertps.commands.TPSCommandTabCompleter;
+import com.zerek.feathertps.commands.TPSTabCompleter;
 import com.zerek.feathertps.listeners.EntityTargetListener;
 import com.zerek.feathertps.tasks.CheckTPSTask;
 import org.bukkit.configuration.ConfigurationSection;
@@ -32,9 +32,9 @@ public final class FeatherTPS extends JavaPlugin {
         getServer().getScheduler().scheduleSyncRepeatingTask(this, new CheckTPSTask(this, tpsKickConfig, killDenseConfig), 0L, 200L);
 
         this.getCommand("tps").setExecutor(new TPSCommand(this));
-        this.getCommand("tps").setTabCompleter(new TPSCommandTabCompleter());
+        this.getCommand("tps").setTabCompleter(new TPSTabCompleter());
         this.getCommand("ping").setExecutor(new PingCommand(this));
-        this.getCommand("ping").setTabCompleter(new PingCommandTabCompleter());
+        this.getCommand("ping").setTabCompleter(new PingTabCompleter());
     }
     @Override
     public void onDisable() {
