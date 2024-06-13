@@ -73,7 +73,7 @@ public class CheckTPSTask implements Runnable{
             //broadcast kills/removals to ops and logger
             if (denseMobsTotal > 0 ){
 
-                double roundedTPS = Math.round(plugin.getServer().getTPS()[0] * 100)/100.0;
+                double roundedTPS = Math.round(plugin.getServer().getTPS()[1] * 100)/100.0;
 
                 plugin.getLogger().warning("TPS: " + roundedTPS + " \nDense Mobs Killed: " + killedMobsCount + "/" + denseMobsTotal);
 
