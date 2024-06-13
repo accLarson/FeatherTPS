@@ -38,6 +38,17 @@ public class PingCommand implements CommandExecutor {
         else if (strings.length == 1) {
             if (commandSender instanceof Player || commandSender instanceof ConsoleCommandSender) {
 
+                if (strings[0].equalsIgnoreCase("all") && commandSender.hasPermission("feather.tps.pingall")) {
+                    plugin.getServer().getOnlinePlayers().forEach(p -> {
+                        String ping = String.valueOf(p.getPing());
+
+                        commandSender.sendMessage(MiniMessage.miniMessage().deserialize(pingMessage,
+                                Placeholder.unparsed("ping", ping),
+                                Placeholder.unparsed("player",p.getName())));
+                    });
+                    return true;
+                }
+
                 Player player = Bukkit.getPlayer(strings[0]);
                 if (player == null || isVanished(player)) {
                     commandSender.sendMessage(ChatColor.of("#E4453A") + "Player not online.");
