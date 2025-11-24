@@ -5,9 +5,8 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.inventory.EntityEquipment;
@@ -46,24 +45,29 @@ public class CheckTPSTask implements Runnable{
 
         // Create list of filtered living entities that can be killed.
         if (tps <= (double) killC.get("tps")){
-            Collection<LivingEntity> killableMobs = plugin.getServer().getWorlds().stream().flatMap(world -> world.getLivingEntities().stream()).collect(Collectors.toList());
+            Collection<Entity> killableMobs = plugin.getServer().getWorlds().stream()
+                    .flatMap(world -> world.getEntities().stream())
+                    .collect(Collectors.toList());
+            
+            // Filter by density
             killableMobs.removeIf(e -> e.getNearbyEntities((Double) killC.get("xz-range"), (Double) killC.get("y-range"), (Double) killC.get("xz-range")).size() < (Integer) killC.get("dense-count"));
-            killableMobs.removeIf(e -> !killableEntities.contains(e.getType().toString()) || (e.customName() != null) || e.isLeashed());
+            
+            // Filter by entity type and custom name
+            killableMobs.removeIf(e -> !killableEntities.contains(e.getType().toString()));
             killableMobs.removeIf(e -> e.customName() != null);
-            killableMobs.removeIf(LivingEntity::isLeashed);
-            killableMobs.removeIf(e ->(e.getEquipment().getHelmet().getType() != Material.AIR));
-            killableMobs.removeIf(e ->(e.getEquipment().getChestplate().getType() != Material.AIR));
-            killableMobs.removeIf(e ->(e.getEquipment().getLeggings().getType() != Material.AIR));
-            killableMobs.removeIf(e ->(e.getEquipment().getBoots().getType() != Material.AIR));
-            killableMobs.removeIf(e ->(e.getEquipment().getItemInMainHand().getType() != Material.AIR));
-            killableMobs.removeIf(e ->(e.getEquipment().getItemInOffHand().getType() != Material.AIR));
+            
+            // Filter living entities by leash and equipment
+            killableMobs.removeIf(e -> e instanceof LivingEntity && ((LivingEntity) e).isLeashed());
+            killableMobs.removeIf(e -> e instanceof LivingEntity && this.hasAnyEquipment((LivingEntity) e));
+
+            // Remove tempted living entities
             killableMobs.removeAll(plugin.getTempted());
             plugin.getTempted().clear();
 
             // Kill dense mobs on a random change.
             int denseMobsTotal = killableMobs.size();
             int killedMobsCount = 0;
-            for (LivingEntity k : killableMobs) {
+            for (Entity k : killableMobs) {
                 if (rand.nextInt(100) < (Integer) killC.get("chance")) {
                     killedMobsCount++;
                     k.remove();
@@ -71,19 +75,35 @@ public class CheckTPSTask implements Runnable{
             }
 
             //broadcast kills/removals to ops and logger
-            if (denseMobsTotal > 0 ){
+            if (denseMobsTotal > 0){
 
-                double roundedTPS = Math.round(plugin.getServer().getTPS()[1] * 100)/100.0;
-
-                plugin.getLogger().warning("TPS: " + roundedTPS + " \nDense Mobs Killed: " + killedMobsCount + "/" + denseMobsTotal);
+                plugin.getLogger().warning("TPS: " + tps + " \nDense Mobs Killed: " + killedMobsCount + "/" + denseMobsTotal);
 
                 for (OfflinePlayer op : plugin.getServer().getOperators()) {
                     if (op.isOnline()) op.getPlayer().sendMessage(MiniMessage.miniMessage().deserialize((String) killC.get("message"),
-                            Placeholder.unparsed("roundedtps", String.valueOf(roundedTPS)),
+                            Placeholder.unparsed("roundedtps", String.valueOf(tps)),
                             Placeholder.unparsed("killedmobscount", String.valueOf(killedMobsCount)),
                             Placeholder.unparsed("densemobstotal", String.valueOf(denseMobsTotal))));
                 }
             }
         }
+    }
+
+    /**
+     * Checks if an entity has any equipment (armor or items in hands)
+     * @param entity The entity to check
+     * @return true if the entity has any equipment, false otherwise
+     */
+    private boolean hasAnyEquipment(LivingEntity entity) {
+        EntityEquipment equipment = entity.getEquipment();
+        if (equipment == null) return false;
+        
+        // Check armor slots
+        if (equipment.getHelmet() != null && equipment.getHelmet().getType() != Material.AIR) return true;
+        if (equipment.getChestplate() != null && equipment.getChestplate().getType() != Material.AIR) return true;
+        if (equipment.getLeggings() != null && equipment.getLeggings().getType() != Material.AIR) return true;
+        if (equipment.getBoots() != null && equipment.getBoots().getType() != Material.AIR) return true;
+        // Check hand slots
+        return equipment.getItemInMainHand().getType() != Material.AIR || equipment.getItemInOffHand().getType() != Material.AIR;
     }
 }

@@ -1,8 +1,8 @@
-tps-message: "<#656b96>TPS <gray>(1m - 5m - 15m)<#656b96>: <#949bd1><tps>"
+tps-message: "<#656b96>TPS <gray>(1s - 1m - 5m)<#656b96>: <#949bd1><tps>"
 ping-message: "<#656b96>Pong! <gray><player> ping<#656b96>: <#949bd1><ping>ms"
 tps-kick:
   #what TPS players should all be kicked at
-  tps: 6.0
+  tps: 8.0
 
   #ammount of ticks between each tps check (20 ticks = 1 second)
   tick-period: 1200
@@ -68,3 +68,6 @@ kill-dense:
     - "BEE"
     - "IRON_GOLEM"
     - "SHULKER"
+    - "CREAKING"
+    - "WIND_CHARGE"
+    - "BREEZE_WIND_CHARGE"
