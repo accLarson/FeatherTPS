@@ -4,8 +4,8 @@ tps-kick:
   #what TPS players should all be kicked at
   tps: 8.0
 
-  #ammount of ticks between each tps check (20 ticks = 1 second)
-  tick-period: 1200
+  #TPS threshold for canceling a scheduled kick (if TPS recovers above this value)
+  cancel-threshold: 16.0
 
   #kick warning message
   warn-message: "<#c0a1d1>Trash TPS detected - Everyone will be automatically kicked"
@@ -14,17 +14,23 @@ tps-kick:
   kick-message: "\n<white>• <#c0a1d1>Server TPS issues auto-triggered this kick"
 
   #kick cancel message
-  cancel-message: "<white>• <#c0a1d1>Server TPS recovered - canceled kick  :  )"
+  cancel-message: "<white>• <#c0a1d1>Server TPS recovered - canceled kick  :  ]"
+
+portal-spawn-reduction:
+  
+  # TPS threshold below which to reduce portal spawns
+  tps-threshold: 20.0
+  
+  # Percentage of normal spawn rate to allow (5 = 5% of normal spawns)
+  spawn-rate: 5
 
 kill-dense:
-  # tps must be this value or below for CheckTPSTask to run
+  # tps must be this value or below for kill-dense to run
   tps: 18.0
 
-  # x and z range (square radius/1/2 the size of the box) for calculating nearby entities around an entity
-  xz-range: 2.5
-
-  # z range (square radius/1/2 the size of the box) for calculating nearby entities around an entity
-  y-range: 1.5
+  # Spherical range (radius in blocks) for calculating nearby entities around an entity
+  # This checks in all directions (X, Y, and Z) forming a sphere
+  range: 2.5
 
   # Required entity count within range to be considered "dense"
   dense-count: 20
