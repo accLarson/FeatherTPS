@@ -19,11 +19,18 @@ public class EntityTargetListener implements Listener {
 
     @EventHandler
     public void onEntityTrack(EntityTargetEvent event) {
+        // Only process if the entity is actually a LivingEntity
+        if (!(event.getEntity() instanceof LivingEntity)) {
+            return;
+        }
+        
+        LivingEntity entity = (LivingEntity) event.getEntity();
+        
         if (event.getReason().toString().equals("TEMPT")) {
-            plugin.getTempted().add((LivingEntity) event.getEntity());
+            plugin.getTempted().add(entity);
         } else {
             // Entity changed target to something other than tempt, remove it
-            plugin.getTempted().remove((LivingEntity) event.getEntity());
+            plugin.getTempted().remove(entity);
         }
     }
 
