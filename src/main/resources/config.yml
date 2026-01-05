@@ -4,17 +4,21 @@ tps-kick:
   #what TPS players should all be kicked at
   tps: 8.0
 
+  #server to transfer players to when TPS is too low
+  transfer-host: "hold.feather64.net"
+  transfer-port: 25564
+
   #TPS threshold for canceling a scheduled kick (if TPS recovers above this value)
   cancel-threshold: 16.0
 
   #kick warning message
-  warn-message: "<#c0a1d1>Trash TPS detected - Everyone will be automatically kicked"
+  warn-message: "<#c0a1d1>Trash TPS detected - Everyone will be transferred to the Holding World"
 
-  #kick warning message
-  kick-message: "\n<white>• <#c0a1d1>Server TPS issues auto-triggered this kick"
+  #transfer/kick message (shown if transfer fails and player is kicked instead)
+  kick-message: "\n<white>• <#c0a1d1>Server TPS issues - Kicked"
 
   #kick cancel message
-  cancel-message: "<white>• <#c0a1d1>Server TPS recovered - canceled kick  :  ]"
+  cancel-message: "<white>• <#c0a1d1>Server TPS recovered - canceled transfer  :  ]"
 
 portal-spawn-reduction:
   
@@ -75,5 +79,3 @@ kill-dense:
     - "IRON_GOLEM"
     - "SHULKER"
     - "CREAKING"
-    - "WIND_CHARGE"
-    - "BREEZE_WIND_CHARGE"

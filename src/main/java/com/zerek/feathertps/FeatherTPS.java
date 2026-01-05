@@ -15,8 +15,8 @@ import java.util.*;
 
 public final class FeatherTPS extends JavaPlugin {
 
-    private final Collection<LivingEntity> tempted = new ArrayList<>();
-    private volatile boolean reducePortalSpawns = false;
+    private final Set<LivingEntity> tempted = new HashSet<>();
+    private boolean reducePortalSpawns = false;
     Map<String,Object> killDenseConfig = new HashMap<>();
     Map<String,Object> tpsKickConfig = new HashMap<>();
     Map<String,Object> portalSpawnConfig = new HashMap<>();
@@ -35,7 +35,7 @@ public final class FeatherTPS extends JavaPlugin {
         ConfigurationSection configurationSection3 = getConfig().getConfigurationSection("portal-spawn-reduction");
         configurationSection3.getKeys(false).forEach(key -> portalSpawnConfig.put(key,configurationSection3.get(key)));
 
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, new CheckTPSTask(this, tpsKickConfig, killDenseConfig, portalSpawnConfig), 200L, 200L);
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, new CheckTPSTask(this, tpsKickConfig, killDenseConfig, portalSpawnConfig), 600L, 200L);
 
         this.getCommand("tps").setExecutor(new TPSCommand(this));
         this.getCommand("tps").setTabCompleter(new TPSTabCompleter());
@@ -48,7 +48,7 @@ public final class FeatherTPS extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
     }
-    public Collection<LivingEntity> getTempted() {
+    public Set<LivingEntity> getTempted() {
         return tempted;
     }
     
